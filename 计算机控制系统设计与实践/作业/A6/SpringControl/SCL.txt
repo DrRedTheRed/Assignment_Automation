@@ -1,0 +1,84 @@
+// Music Fountain Control System
+// Main Program
+
+IF "SB1" THEN
+    #SystemActive := TRUE;    // Start system
+END_IF;
+
+IF "SB2" THEN
+    #SystemActive := FALSE;   // Stop system
+    // Reset all outputs
+    "P1" := FALSE;
+    "P2" := FALSE;
+    "A_Group" := 0;
+    "B_Group" := 0;
+    "SC".StepCounter := 0;
+    "SC".TimerValue := T#0s;
+    "SC".CycleComplete := FALSE;
+END_IF;
+
+IF #SystemActive THEN
+    CASE "SC".StepCounter OF
+
+        0:  // A group sprays for 6 seconds
+            "P1" := TRUE;
+            "A_Group" := 16#3F;
+            "SC".TimerValue := T#6s;
+            "SC".StepCounter := 1;
+            
+        1:
+            "IEC_Timer_0_DB".TON(IN := TRUE,
+                                 PT := "SC".TimerValue);
+            IF "IEC_Timer_0_DB".Q THEN
+                "IEC_Timer_0_DB".IN := FALSE;
+                "P1" := FALSE;
+                "A_Group" := 0;
+                "SC".StepCounter := 2;
+            END_IF;
+            
+        2:  // B group sprays for 6 seconds
+            "P2" := TRUE;
+            "B_Group" := 16#3F;
+            "SC".TimerValue := T#6s;
+            "SC".StepCounter := 3;
+            
+        3:
+            "IEC_Timer_0_DB".TON(IN := TRUE,
+                                 PT := "SC".TimerValue);
+            IF "IEC_Timer_0_DB".Q THEN
+                "IEC_Timer_0_DB".IN := FALSE;
+                "P2" := FALSE;
+                "B_Group" := 0;
+                "SC".StepCounter := 4;
+            END_IF;
+            
+        4:  // A and B groups spray together for 6 seconds
+            "P1" := TRUE;
+            "P2" := TRUE;
+            "A_Group" := 16#3F;
+            "B_Group" := 16#3F;
+            "SC".TimerValue := T#6s;
+            "SC".StepCounter := 5;
+            
+        5:
+            "IEC_Timer_0_DB".TON(IN := TRUE,
+                                 PT := "SC".TimerValue);
+            IF "IEC_Timer_0_DB".Q THEN
+                "IEC_Timer_0_DB".IN := FALSE;
+                "P1" := FALSE;
+                "P2" := FALSE;
+                "A_Group" := 0;
+                "B_Group" := 0;
+                "SC".StepCounter := 6;
+            END_IF;
+            
+        6:  // Wait 3 seconds before looping
+            "IEC_Timer_0_DB".TON(IN := TRUE,
+                                 PT := T#3s);
+            IF "IEC_Timer_0_DB".Q THEN
+                "IEC_Timer_0_DB".IN := FALSE;
+                "SC".StepCounter := 0;
+                "SC".CycleComplete := TRUE;
+            END_IF;
+    END_CASE;
+END_IF;

@@ -1,0 +1,195 @@
+// Music Fountain Control System - Main Program
+      CLR
+// Check SB1 start button
+      A     "SB1"
+      JCN   SKIP_SB1
+      SET
+      =     #SystemActive
+
+SKIP_SB1 : A "SB2"
+      JCN   SKIP_SB2
+      CLR
+      =     #SystemActive
+
+// Reset outputs
+      CLR
+      =     "P1"
+      CLR
+      =     "P2"
+      L     0
+      T     "A_Group"
+      L     0
+      T     "B_Group"
+      L     0
+      T     "SC".StepCounter
+      L     T#0s
+      T     "SC".TimerValue
+      CLR
+      =     "SC".CycleComplete
+
+SKIP_SB2 : A #SystemActive
+      JCN   END_CASE
+
+// CASE START
+      L     "SC".StepCounter
+      L     0
+      ==I
+      JCN   CASE_1
+
+// Step 0: Spray Group A for 6s
+      SET
+      =     "P1"
+      L     16#3F
+      T     "A_Group"
+      L     T#6s
+      T     "SC".TimerValue
+      L     1
+      T     "SC".StepCounter
+      JU    END_CASE
+
+CASE_1 : L  1
+      L     "SC".StepCounter
+      ==I
+      JCN   CASE_2
+
+// Step 1: Wait for A spray to complete
+      CALL  TON , "IEC_Timer_0_DB"
+         time_type:=Time
+         IN :=TRUE
+         PT :="SC".TimerValue
+         Q  :=
+         ET :=
+      A     "IEC_Timer_0_DB".Q
+      JCN   END_CASE
+
+// Proceed to next step
+      CLR
+      =     "IEC_Timer_0_DB".IN
+      CLR
+      =     "P1"
+      L     0
+      T     "A_Group"
+      L     2
+      T     "SC".StepCounter
+      JU    END_CASE
+
+CASE_2 : L  "SC".StepCounter
+      L     2
+      ==I
+      JCN   CASE_3
+
+// Step 2: Spray Group B for 6s
+      SET
+      =     "P2"
+      L     16#3F
+      T     "B_Group"
+      L     T#6s
+      T     "SC".TimerValue
+      L     3
+      T     "SC".StepCounter
+      JU    END_CASE
+
+CASE_3 : L  "SC".StepCounter
+      L     3
+      ==I
+      JCN   CASE_4
+
+// Step 3: Wait for B spray to complete
+      CALL  TON , "IEC_Timer_0_DB"
+         time_type:=Time
+         IN :=TRUE
+         PT :="SC".TimerValue
+         Q  :=
+         ET :=
+      A     "IEC_Timer_0_DB".Q
+      JCN   END_CASE
+
+// Proceed to next step
+      CLR
+      =     "IEC_Timer_0_DB".IN
+      CLR
+      =     "P2"
+      L     0
+      T     "B_Group"
+      L     4
+      T     "SC".StepCounter
+      JU    END_CASE
+
+CASE_4 : L  "SC".StepCounter
+      L     4
+      ==I
+      JCN   CASE_5
+
+// Step 4: Spray both groups for 6s
+      SET
+      =     "P1"
+      SET
+      =     "P2"
+      L     16#3F
+      T     "A_Group"
+      L     16#3F
+      T     "B_Group"
+      L     T#6s
+      T     "SC".TimerValue
+      L     5
+      T     "SC".StepCounter
+      JU    END_CASE
+
+CASE_5 : L  "SC".StepCounter
+      L     5
+      ==I
+      JCN   CASE_6
+
+// Step 5: Wait for both sprays to complete
+      CALL  TON , "IEC_Timer_0_DB"
+         time_type:=Time
+         IN :=TRUE
+         PT :="SC".TimerValue
+         Q  :=
+         ET :=
+      A     "IEC_Timer_0_DB".Q
+      JCN   END_CASE
+
+// Proceed to next step
+      CLR
+      =     "IEC_Timer_0_DB".IN
+      CLR
+      =     "P1"
+      CLR
+      =     "P2"
+      L     0
+      T     "A_Group"
+      L     0
+      T     "B_Group"
+      L     T#3s
+      T     "SC".TimerValue
+      L     6
+      T     "SC".StepCounter
+      JU    END_CASE
+
+CASE_6 : L  6
+      L     "SC".StepCounter
+      ==I
+      JCN   END_CASE
+
+// Step 6: Wait 3s before repeat
+      CALL  TON , "IEC_Timer_0_DB"
+         time_type:=Time
+         IN :=TRUE
+         PT :="SC".TimerValue
+         Q  :=
+         ET :=
+      A     "IEC_Timer_0_DB".Q
+      JCN   END_CASE
+
+// Reset for next cycle
+      CLR
+      =     "IEC_Timer_0_DB".IN
+      SET
+      =     "SC".CycleComplete
+      L     0
+      T     "SC".StepCounter
+      JU    END_CASE
+
+// End of CASE
+END_CASE : BEU

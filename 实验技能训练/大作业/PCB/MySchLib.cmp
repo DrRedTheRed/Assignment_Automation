@@ -1,0 +1,20 @@
+Component Name : LM358
+
+Part Count : 2
+
+Part : LM358
+     Pins - (Normal) : 0
+          Hidden Pins : 
+
+Part : LM358
+     Pins - (Normal) : 8
+          OUT1           0              Passive
+          IN1-           1              Passive
+          IN1+           2              Passive
+          GND            3              Passive
+          VCC            4              Passive
+          OUT2           5              Passive
+          IN2-           6              Passive
+          IN2+           7              Passive
+          Hidden Pins : 
+
