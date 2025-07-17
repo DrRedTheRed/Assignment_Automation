@@ -1,0 +1,69 @@
+[System]
+Name='Fuzzy2'
+Type='mamdani'
+Version=2.0
+NumInputs=2
+NumOutputs=1
+NumRules=25
+AndMethod='min'
+OrMethod='max'
+ImpMethod='min'
+AggMethod='max'
+DefuzzMethod='centroid'
+
+[Input1]
+Name='Epos'
+Range=[-5 5]
+NumMFs=5
+MF1='NB':'trimf',[-7.5 -5 -2.5]
+MF2='NS':'trimf',[-5 -2.5 0]
+MF3='ZE':'trimf',[-2.5 0 2.5]
+MF4='PS':'trimf',[0 2.5 5]
+MF5='PB':'trimf',[2.5 5 7.5]
+
+[Input2]
+Name='v'
+Range=[-15 15]
+NumMFs=5
+MF1='NB':'trimf',[-21.25 -15 -0.5]
+MF2='NS':'trimf',[-15 -0.5 0]
+MF3='ZE':'trimf',[-0.5 0 0.5]
+MF4='PS':'trimf',[0 0.5 15]
+MF5='PB':'trimf',[0.5 15 21.25]
+
+[Output1]
+Name='theta'
+Range=[-0.8 0.8]
+NumMFs=5
+MF1='NB':'trimf',[-1.13333 -0.8 -0.333333]
+MF2='NS':'trimf',[-0.8 -0.333333 0]
+MF3='ZE':'trimf',[-0.333333333333333 0 0.333333333333333]
+MF4='PS':'trimf',[0 0.333333 0.8]
+MF5='PB':'trimf',[0.333333 0.8 1.13333]
+
+[Rules]
+1 1, 2 (1) : 1
+2 1, 3 (1) : 1
+3 1, 3 (1) : 1
+4 1, 3 (1) : 1
+5 1, 4 (1) : 1
+1 2, 1 (1) : 1
+2 2, 2 (1) : 1
+3 2, 3 (1) : 1
+4 2, 4 (1) : 1
+5 2, 5 (1) : 1
+1 3, 1 (1) : 1
+2 3, 2 (1) : 1
+3 3, 3 (1) : 1
+4 3, 4 (1) : 1
+5 3, 5 (1) : 1
+1 4, 1 (1) : 1
+2 4, 2 (1) : 1
+3 4, 3 (1) : 1
+4 4, 4 (1) : 1
+5 4, 5 (1) : 1
+1 5, 2 (1) : 1
+2 5, 3 (1) : 1
+3 5, 3 (1) : 1
+4 5, 3 (1) : 1
+5 5, 4 (1) : 1

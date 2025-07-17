@@ -1,0 +1,47 @@
+[System]
+Name='fuzzy1'
+Type='mamdani'
+Version=2.0
+NumInputs=2
+NumOutputs=1
+NumRules=9
+AndMethod='min'
+OrMethod='max'
+ImpMethod='min'
+AggMethod='max'
+DefuzzMethod='centroid'
+
+[Input1]
+Name='e'
+Range=[-0.04 0.04]
+NumMFs=3
+MF1='N':'trimf',[-0.08 -0.04 0]
+MF2='Z':'trimf',[-0.04 1.301e-18 0.04]
+MF3='P':'trimf',[0 0.04 0.08]
+
+[Input2]
+Name='ec'
+Range=[-0.1 0.1]
+NumMFs=3
+MF1='N':'trimf',[-0.2 -0.1 0]
+MF2='Z':'trimf',[-0.1 0 0.1]
+MF3='P':'trimf',[0 0.1 0.2]
+
+[Output1]
+Name='output1'
+Range=[-7.53 12.47]
+NumMFs=3
+MF1='N':'trimf',[-17.53 -7.53 2.47]
+MF2='Z':'trimf',[-7.53 2.47 12.47]
+MF3='P':'trimf',[2.47 12.47 22.47]
+
+[Rules]
+1 1, 1 (1) : 1
+1 2, 1 (1) : 1
+1 3, 2 (1) : 1
+2 1, 1 (1) : 1
+2 2, 2 (1) : 1
+2 3, 3 (1) : 1
+3 1, 2 (1) : 1
+3 2, 3 (1) : 1
+3 3, 3 (1) : 1
